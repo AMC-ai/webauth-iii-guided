@@ -2,6 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const token = require('jsonwebtoken');
 
+
 const Users = require('../users/users-model.js');
 
 // for endpoints beginning with /api/auth
@@ -50,7 +51,7 @@ function signToken(user) {
     subject: user.id,
     role: user.role,
   }
-  const secret = process.env.JWT_SECRET || "is it secret, is it safe?";
+  const secret = process.env.SECRET || "this is my secret, i sleep eyes wide open.";
   const options = {
     expiresIn: '1h',
   };

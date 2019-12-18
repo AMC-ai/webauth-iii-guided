@@ -1,14 +1,15 @@
 const bcrypt = require('bcryptjs');
-const token = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const secret = require('./secret');
 
 const Users = require('../users/users-model.js');
 
 
 module.exports = (req, res, next) => {
   const token = req.headers.authorization;
-
+  console.log(token, req.headers);
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+    jwt.verify(token, secret, (err, decodedToken) => {
       if (err) {
         console.log('failed verify', err);
         res.status(401).json({ message: 'not verified' });
