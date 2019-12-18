@@ -44,7 +44,11 @@ router.post('/login', (req, res) => {
 
 function signToken(user) {
   const payload = {
+    // header payload and verify signature
+    // payload -> username, id, roles, exp date
     username: user.username,
+    subject: user.id,
+    role: user.role,
   }
   const secret = process.env.JWT_SECRET || "is it secret, is it safe?";
   const options = {
