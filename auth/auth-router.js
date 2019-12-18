@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const token = require('jsonwebtoken');
 
 const Users = require('../users/users-model.js');
 
@@ -25,7 +26,11 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        // sign in token
+        const token = signToken(user);
+        //send the token
         res.status(200).json({
+          token,
           message: `Welcome ${user.username}!`,
         });
       } else {
@@ -33,8 +38,19 @@ router.post('/login', (req, res) => {
       }
     })
     .catch(error => {
-      res.status(500).json(error);
+      res.status(500).json({ error: "you f*cked up" });
     });
 });
+
+function signToken(user) {
+  const payload = {
+    username: user.username,
+  }
+  const secret = process.env.JWT_SECRET || "is it secret, is it safe?";
+  const options = {
+    expiresIn: '1h',
+  };
+  return token.sign(payload, secret, options)
+}
 
 module.exports = router;
